@@ -57,7 +57,7 @@ for _k in range(3):
                 site.replace('Menu\n','')
         writeToCsv(name,phone,mail,site)
         print(phone,mail,site)
-     time.sleep(2)
+    time.sleep(2)
     next = driver.find_element_by_xpath('//*[@aria-label=" Next page "]')
     next.click()
 driver.quit()
