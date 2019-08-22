@@ -12,9 +12,10 @@ def writeToCsv(name: str, phone: str, email: str, link: str, csvname):
 a_dict = {'hyderabad yoga':'kjkf','gym banglore':12}
 def search(dict,no_searches):
     for key in dict:
-        driver = webdriver.Chrome()
         keyword = key
         keyword = keyword.replace(' ','+')
+        driver = webdriver.Chrome()
+        driver.maximize_window()
         driver.get("https://www.google.com/maps/search/"+keyword+"/")
         time.sleep(1)
         counter = no_searches + 1
@@ -23,10 +24,15 @@ def search(dict,no_searches):
                 counter-=1
                 if(counter ==0):
                     break
-                time.sleep(3)
-                searches = driver.find_elements_by_class_name("section-result-content")
-                len(searches)
-                title = searches[i].find_element_by_class_name("section-result-title")
+                time.sleep(4)
+                while True:
+                    try:
+                        searches = driver.find_elements_by_class_name("section-result-content")
+                        title = searches[i].find_element_by_class_name("section-result-title")
+                    except IndexError:
+                        continue
+                    break
+
                 name=(title.text)
                 xpath = '//*[contains(concat( " ", @class, " " ), concat( " ", "section-info-line", " " ))]'
                 searches[i].click()
@@ -50,8 +56,6 @@ def search(dict,no_searches):
 
                 driver.execute_script(script="window.history.back(-1);")
                 time.sleep(1)
-                # current_url = driver.current_url
-                # print(current_url)
                 mail =''
                 site = ''
                 for l in eorw:
@@ -61,9 +65,10 @@ def search(dict,no_searches):
                         site = l
                         site.replace('Menu\n','')
                 writeToCsv(name,phone,mail,site,key)
-                print(phone,mail,site)
+                print(name,phone,mail,site)
             time.sleep(2)
             next = driver.find_element_by_xpath('//*[@aria-label=" Next page "]')
             next.click()
         driver.quit()
+
 search(a_dict,30)
